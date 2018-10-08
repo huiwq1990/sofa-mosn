@@ -35,7 +35,7 @@ func newFilterManager(conn types.Connection) types.FilterManager {
 		downstreamFilters: make([]types.WriteFilter, 0, 32),
 	}
 }
-
+// 读过滤器，处理上游返回给Client数据。作为Server的读端，是upstreamFilters
 func (fm *filterManager) AddReadFilter(rf types.ReadFilter) {
 	newArf := &activeReadFilter{
 		filter:        rf,
@@ -68,11 +68,11 @@ func (fm *filterManager) InitializeReadFilters() bool {
 	if len(fm.upstreamFilters) == 0 {
 		return false
 	}
-
+	// 初始化Filter，并调用filter的onConnection
 	fm.onContinueReading(nil)
 	return true
 }
-
+// 参数代表从哪个filter开始处理
 func (fm *filterManager) onContinueReading(filter *activeReadFilter) {
 	var index int
 	var uf *activeReadFilter
@@ -80,11 +80,11 @@ func (fm *filterManager) onContinueReading(filter *activeReadFilter) {
 	if filter != nil {
 		index = filter.index + 1
 	}
-
+	// 之前在
 	for ; index < len(fm.upstreamFilters); index++ {
 		uf = fm.upstreamFilters[index]
 		uf.index = index
-
+		// InitializeReadFilters会触发初始化
 		if !uf.initialized {
 			uf.initialized = true
 

@@ -64,7 +64,7 @@ func (b *IoBuffer) Read(p []byte) (n int, err error) {
 
 	return
 }
-
+// 读有超时设置，
 func (b *IoBuffer) ReadOnce(r io.Reader) (n int64, err error) {
 	var conn net.Conn
 	var loop, ok, first = true, true, true
@@ -94,7 +94,7 @@ func (b *IoBuffer) ReadOnce(r io.Reader) (n int64, err error) {
 				}
 			}
 		}
-
+		// l 代表能读入数据的长度
 		l := cap(b.buf) - len(b.buf)
 
 		if first {
@@ -102,7 +102,7 @@ func (b *IoBuffer) ReadOnce(r io.Reader) (n int64, err error) {
 		} else {
 			conn.SetReadDeadline(time.Now().Add(10 * time.Millisecond))
 		}
-
+		// m读取的数据长度，这里会一直阻塞，直到有数据过来。
 		m, e := r.Read(b.buf[len(b.buf):cap(b.buf)])
 
 		conn.SetReadDeadline(time.Time{})
@@ -113,7 +113,7 @@ func (b *IoBuffer) ReadOnce(r io.Reader) (n int64, err error) {
 
 		b.buf = b.buf[0 : len(b.buf)+m]
 		n += int64(m)
-
+		// 如果缓冲区没读满，不需要循环
 		if l != m {
 			loop = false
 		}
@@ -220,7 +220,7 @@ func (b *IoBuffer) grow(n int) int {
 
 	return m
 }
-
+// 写
 func (b *IoBuffer) WriteTo(w io.Writer) (n int64, err error) {
 	for b.off < len(b.buf) {
 		nBytes := b.Len()

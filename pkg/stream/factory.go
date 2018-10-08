@@ -22,7 +22,7 @@ import (
 
 	"github.com/alipay/sofa-mosn/pkg/types"
 )
-
+//init调用后，factory为空；同时，pkg/stream/sofarpc/stream.go:42会触发注册
 var streamFactories map[types.Protocol]ProtocolStreamFactory
 
 func init() {
@@ -35,7 +35,7 @@ func Register(prot types.Protocol, factory ProtocolStreamFactory) {
 
 func CreateServerStreamConnection(context context.Context, prot types.Protocol, connection types.Connection,
 	callbacks types.ServerStreamConnectionEventListener) types.ServerStreamConnection {
-
+	// 根据types.Protocol选择streamfactory
 	if ssc, ok := streamFactories[prot]; ok {
 		return ssc.CreateServerStream(context, connection, callbacks)
 	}

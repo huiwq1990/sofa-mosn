@@ -36,7 +36,7 @@ type listener struct {
 	listenerTag                           uint64
 	perConnBufferLimitBytes               uint32
 	handOffRestoredDestinationConnections bool
-	cb                                    types.ListenerEventListener
+	cb                                    types.ListenerEventListener // 作为agent启动的监听
 	rawl                                  *net.TCPListener
 	logger                                log.Logger
 	config                                *v2.Listener

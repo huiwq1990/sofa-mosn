@@ -24,7 +24,7 @@ import (
 	"github.com/alipay/sofa-mosn/pkg/log"
 	"github.com/alipay/sofa-mosn/pkg/protocol/sofarpc"
 )
-
+// 关联不通的处理器，执行具体
 type boltCommandHandler struct {
 	processors map[int16]sofarpc.RemotingProcessor
 }

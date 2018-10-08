@@ -126,7 +126,7 @@ type routeMatcher struct {
 func (rm *routeMatcher) Route(headers types.HeaderMap, randomValue uint64) types.Route {
 	// First Step: Select VirtualHost with "host" in Headers form VirtualHost Array
 	log.StartLogger.Tracef("routing header = %v,randomValue=%v", headers, randomValue)
-	virtualHost := rm.findVirtualHost(headers)
+	virtualHost := rm.findVirtualHost(headers) //根据header进行匹配host信息
 
 	if virtualHost == nil {
 		log.DefaultLogger.Errorf("No VirtualHost Found when Routing, Request Headers = %+v", headers)

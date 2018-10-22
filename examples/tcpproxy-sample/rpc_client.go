@@ -16,6 +16,7 @@ import (
 	"github.com/alipay/sofa-mosn/pkg/stream"
 	_ "github.com/alipay/sofa-mosn/pkg/stream/sofarpc"
 	"github.com/alipay/sofa-mosn/pkg/types"
+	"bytes"
 )
 
 type Client struct {
@@ -69,7 +70,12 @@ func buildBoltV1Request(requestID uint32) *sofarpc.BoltRequestCommand {
 		Timeout:  -1,
 	}
 
-	headers := map[string]string{"service": "testSofa"} // used for sofa routing
+	var buf bytes.Buffer
+	for i:=0;i<10000;i++{
+		buf.WriteString("12312");
+	}
+
+	headers := map[string]string{"service": buf.String()} // used for sofa routing
 
 	if headerBytes, err := serialize.Instance.Serialize(headers); err != nil {
 		panic("serialize headers error")
@@ -83,16 +89,16 @@ func buildBoltV1Request(requestID uint32) *sofarpc.BoltRequestCommand {
 
 func main() {
 	log.InitDefaultLogger("", log.DEBUG)
-	t := flag.Bool("t", false, "-t")
+	//t := flag.Bool("t", false, "-t")
 	flag.Parse()
 	if client := NewClient("127.0.0.1:2045"); client != nil {
 		for {
 			client.Request()
-			time.Sleep(200 * time.Millisecond)
-			if !*t {
-				time.Sleep(3 * time.Second)
-				return
-			}
+			time.Sleep(100 * time.Second)
+			//if !*t {
+			//	time.Sleep(3 * time.Second)
+			//	return
+			//}
 		}
 	}
 }
